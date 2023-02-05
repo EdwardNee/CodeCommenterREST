@@ -7,7 +7,6 @@ public class Comment {
 
     public Comment() {}
 
-
     public Comment(String code, String firstPart) {
         this.code = code;
         this.firstPart = firstPart;

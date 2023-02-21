@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
+
+    private final ScriptRunner runner = new ScriptRunner();
     public String generateComment(Comment code) {
-        return code.getCode();
+        return code.getCode() + runner.runPythonScript(code.getCode());
     }
 
     public String completeComment(Comment code) {

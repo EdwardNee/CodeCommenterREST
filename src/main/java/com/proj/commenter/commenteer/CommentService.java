@@ -1,11 +1,14 @@
 package com.proj.commenter.commenteer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
 
-    private final ScriptRunner runner = new ScriptRunner();
+    @Autowired
+    private ScriptRunner runner;
+
     public String generateComment(Comment code) {
         return code.getCode() + runner.runPythonScript(code.getCode());
     }

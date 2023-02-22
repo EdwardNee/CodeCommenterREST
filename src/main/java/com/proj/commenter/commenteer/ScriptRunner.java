@@ -1,5 +1,7 @@
 package com.proj.commenter.commenteer;
 
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.util.Scanner;
 /**
  * Simple class that helps to run python script.
  */
+@Component("scriptRunner")
 class ScriptRunner {
     /**
      * String constant to depict handled error while script execution.

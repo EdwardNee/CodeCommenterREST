@@ -1,4 +1,4 @@
-package com.proj.commenter.commenteer;
+package com.proj.commenter.utils;
 
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Simple class that helps to run python script.
  */
 @Component("scriptRunner")
-class ScriptRunner {
+public class ScriptRunner {
     /**
      * String constant to depict handled error while script execution.
      */
@@ -22,8 +22,18 @@ class ScriptRunner {
      * @param code Input value for running script.
      * @return Returns result of the execution.
      */
-    String runPythonScript(String code) {
+    public String runPythonScript(String code) {
         String path = "C:\\Projects\\IntellijProjects\\CodeCommenterREST\\test.py";
+        return runPythonScript(code, path);
+    }
+
+    /**
+     * Method runs python by a given <code>path</code> script and passes <code>code</code> as input value.
+     * @param code Input value for running script.
+     * @param path Path to executable python script.
+     * @return Returns result of the execution.
+     */
+    public String runPythonScript(String code, String path) {
         String baseLine = "py";
 
         File file = new File(path);

@@ -2,6 +2,7 @@ package com.proj.commenter.controller;
 
 import com.proj.commenter.model.CommentResponse;
 import com.proj.commenter.model.Comment;
+import com.proj.commenter.model.ErrorEnum;
 import com.proj.commenter.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,9 +29,12 @@ public class CommentController {
     }
 
     @PostMapping("/generate_comment")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<CommentResponse> generateComment(@RequestBody Comment code) {
-        return new ResponseEntity<>(service.generateComment(code), HttpStatus.OK);
+        CommentResponse result = service.generateComment(code);
+
+        HttpStatus status = result.error().errorEnum() == ErrorEnum.OK ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
+
+        return new ResponseEntity<>(result, status);
     }
 
     @PostMapping("/complete_comment")

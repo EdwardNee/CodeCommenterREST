@@ -1,8 +1,10 @@
 package com.proj.commenter.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.proj.commenter.model.CommentError;
 import com.proj.commenter.model.CommentResponse;
 import com.proj.commenter.model.Comment;
+import com.proj.commenter.model.ErrorEnum;
 import com.proj.commenter.service.CommentService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeAll;
@@ -43,7 +45,7 @@ public class TestingWebApplicationTest {
     @BeforeAll
     public static void init() {
         comment = new Comment("code", "first_part");
-        commentResponse = new CommentResponse(comment.getCode() + "response");
+        commentResponse = new CommentResponse(comment.getCode() + "response", new CommentError(ErrorEnum.OK, null));
     }
 
     @Test
@@ -56,7 +58,7 @@ public class TestingWebApplicationTest {
     }
 
     @Test
-    public void testGenerateCommentEntry() throws Exception {
+    public void testGenerateCommentEntryOK() throws Exception {
         String json = objectMapper.writeValueAsString(comment);
 
         given(service.generateComment(comment)).willReturn(commentResponse);
@@ -66,6 +68,20 @@ public class TestingWebApplicationTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk()).andDo(print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.generatedComment", CoreMatchers.is(commentResponse.generatedComment())));
+    }
+
+    @Test
+    public void testGenerateCommentEntryError() throws Exception {
+        String json = objectMapper.writeValueAsString(comment);
+        CommentResponse localResponse = new CommentResponse(null, new CommentError(ErrorEnum.ERROR, "Some error"));
+
+        given(service.generateComment(comment)).willReturn(localResponse);
+        ResultActions response = this.mockMvc.perform(
+                post("/api/v1/generate_comment")
+                        .contentType(MediaType.APPLICATION_JSON).content(json));
+
+        response.andExpect(MockMvcResultMatchers.status().isInternalServerError()).andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.generatedComment", CoreMatchers.is(localResponse.generatedComment())));
     }
 
     @Test

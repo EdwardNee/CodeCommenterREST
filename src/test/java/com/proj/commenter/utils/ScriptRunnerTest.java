@@ -1,5 +1,9 @@
 package com.proj.commenter.utils;
 
+import com.proj.commenter.common_for_tests.CommonUtilsForTest;
+import com.proj.commenter.model.CommentError;
+import com.proj.commenter.model.CommentResponse;
+import com.proj.commenter.model.ErrorEnum;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -14,20 +18,6 @@ class ScriptRunnerTest {
     private final String path = "test.py";
     private final ScriptRunner scriptRunner = new ScriptRunner();
 
-    private void createFile(String path, String codeForFile) {
-        try (FileWriter fileWriter = new FileWriter(path)) {
-            fileWriter.write(codeForFile);
-        } catch (IOException e) { }
-    }
-
-    private void deleteFile() {
-        File file = new File(path);
-
-        if (file.exists()) {
-            file.delete();
-        }
-    }
-
     @Test
     public void testBasicScriptRunner() {
         String codeForFile = """
@@ -38,21 +28,25 @@ class ScriptRunnerTest {
                     code_line = sys.argv[1]
                     print(test(code_line))
                 """;
-        createFile(path, codeForFile);
+        CommonUtilsForTest.createFile(path, codeForFile);
 
-        String result = scriptRunner.runPythonScript(basicCode);
+        CommentError result = scriptRunner.runPythonScript(basicCode);
 
-        assertEquals("That is test file: basic code", result);
+        assertEquals("That is test file: basic code", result.errorMessage());
+        assertEquals(ErrorEnum.OK, result.errorEnum());
 
-        deleteFile();
+        CommonUtilsForTest.deleteFile(path);
     }
 
 
     @Test
     public void testRunWithNonExistedFile() {
-        String result = scriptRunner.runPythonScript(basicCode, path);
+        CommentError result = scriptRunner.runPythonScript(basicCode, path);
 
-        assertEquals("Error while running python script test.py: File does not exists.", result);
+        assertEquals("Error while running python script test.py: File does not exist.", result.errorMessage());
+        assertEquals(ErrorEnum.ERROR, result.errorEnum());
+
+        CommonUtilsForTest.deleteFile(path);
     }
 
     @Test
@@ -65,10 +59,10 @@ class ScriptRunnerTest {
                     print(test(code_line))
                 """;
 
-        createFile(path, codeForFile);
+        CommonUtilsForTest.createFile(path, codeForFile);
 
         String absolutePath = new File(path).getAbsolutePath();
-        String result = scriptRunner.runPythonScript(basicCode, absolutePath);
+        CommentError result = scriptRunner.runPythonScript(basicCode, absolutePath);
 
         String expected = """
                 Error while running python script %s: Traceback (most recent call last):
@@ -76,8 +70,9 @@ class ScriptRunnerTest {
                     code_line = sys.argv[1]
                 NameError: name 'sys' is not defined
                 """;
-        assertEquals(result, String.format(expected, absolutePath, absolutePath));
+        assertEquals(String.format(expected, absolutePath, absolutePath), result.errorMessage());
+        assertEquals(ErrorEnum.ERROR, result.errorEnum());
 
-        deleteFile();
+        CommonUtilsForTest.deleteFile(path);
     }
 }

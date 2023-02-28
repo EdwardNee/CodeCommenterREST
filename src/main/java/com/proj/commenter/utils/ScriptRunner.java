@@ -1,5 +1,7 @@
-package com.proj.commenter.commenteer;
+package com.proj.commenter.utils;
 
+import com.proj.commenter.model.CommentError;
+import com.proj.commenter.model.ErrorEnum;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -11,7 +13,7 @@ import java.util.Scanner;
  * Simple class that helps to run python script.
  */
 @Component("scriptRunner")
-class ScriptRunner {
+public class ScriptRunner {
     /**
      * String constant to depict handled error while script execution.
      */
@@ -22,13 +24,23 @@ class ScriptRunner {
      * @param code Input value for running script.
      * @return Returns result of the execution.
      */
-    String runPythonScript(String code) {
+    public CommentError runPythonScript(String code) {
         String path = "C:\\Projects\\IntellijProjects\\CodeCommenterREST\\test.py";
+        return runPythonScript(code, path);
+    }
+
+    /**
+     * Method runs python by a given <code>path</code> script and passes <code>code</code> as input value.
+     * @param code Input value for running script.
+     * @param path Path to executable python script.
+     * @return Returns result of the execution.
+     */
+    public CommentError runPythonScript(String code, String path) {
         String baseLine = "py";
 
         File file = new File(path);
         if (!file.exists()) {
-            return String.format(errorMessage, path, "File does not exists.");
+            return new CommentError(ErrorEnum.ERROR, String.format(errorMessage, path, "File does not exist."));
         }
 
         try {
@@ -46,13 +58,15 @@ class ScriptRunner {
 
             scanner.close();
             if (exitCode == 0) {
-                return outResult.toString();
+                return new CommentError(ErrorEnum.OK, outResult.toString());
             } else {
-                return nonZeroCodeProcess(process, path);
+                return new CommentError(ErrorEnum.ERROR, nonZeroCodeProcess(process, path));
             }
 
         } catch (IOException | InterruptedException e) {
-            return String.format(errorMessage, path, e.getMessage());
+
+            return new CommentError(ErrorEnum.ERROR, String.format(errorMessage, path, e.getMessage()));
+            //String.format(errorMessage, path, e.getMessage());
         }
     }
 

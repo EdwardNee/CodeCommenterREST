@@ -25,7 +25,7 @@ public class ScriptRunner {
      * @return Returns result of the execution.
      */
     public CommentError runPythonScript(String code) {
-        String path = "C:\\Projects\\IntellijProjects\\CodeCommenterREST\\test.py";
+        String path = "test.py";
         return runPythonScript(code, path);
     }
 
@@ -36,7 +36,7 @@ public class ScriptRunner {
      * @return Returns result of the execution.
      */
     public CommentError runPythonScript(String code, String path) {
-        String baseLine = "py";
+        String baseLine = "python3";
 
         File file = new File(path);
         if (!file.exists()) {

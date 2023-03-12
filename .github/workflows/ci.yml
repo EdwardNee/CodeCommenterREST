@@ -16,10 +16,27 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven Project
-      run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - name: Run tests and collect coverage
-      run: mvn -B test
+
+#    - name: Install curl and bash
+#      run: |
+#        sudo apt-get update
+#        sudo apt-get install -y curl bash
+
+    - name: Build Docker image
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      run: |
+        docker build --build-arg CODECOV_TOKEN=$CODECOV_TOKEN --tag my-app:latest .
+
+#    - name: Run tests with JaCoCo
+#      run: |
+#        docker run --rm \
+#          -v "${PWD}/target:/app/target" \
+#          my-app:latest \
+#          sh -c "java -jar /app/target/commenter-0.0.1-SNAPSHOT.jar && \
+#          cp /app/target/jacoco.exec /app"
+          
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:

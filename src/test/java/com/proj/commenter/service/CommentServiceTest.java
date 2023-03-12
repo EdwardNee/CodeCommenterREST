@@ -49,7 +49,7 @@ public class CommentServiceTest {
 
 
         String expected = String.format("Error while running python script %s: File does not exist.",
-                new File(".").getCanonicalPath() + "\\test.py");
+               /* new File(".").getCanonicalPath() +*/ "test.py");
 
         assertEquals(expected, result.error().errorMessage());
         assertEquals(ErrorEnum.ERROR, result.error().errorEnum());

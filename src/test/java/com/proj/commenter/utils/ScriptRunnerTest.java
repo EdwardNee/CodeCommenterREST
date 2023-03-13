@@ -28,7 +28,7 @@ class ScriptRunnerTest {
                     code_line = sys.argv[1]
                     print(test(code_line))
                 """;
-        CommonUtilsForTest.createFile(path, codeForFile);
+        CommonUtilsForTest.createFile("script\\test.py", codeForFile);
 
         CommentError result = scriptRunner.runPythonScript(basicCode);
 
@@ -41,12 +41,12 @@ class ScriptRunnerTest {
 
     @Test
     public void testRunWithNonExistedFile() {
+        CommonUtilsForTest.deleteFile(path);
+
         CommentError result = scriptRunner.runPythonScript(basicCode, path);
 
         assertEquals("Error while running python script test.py: File does not exist.", result.errorMessage());
         assertEquals(ErrorEnum.ERROR, result.errorEnum());
-
-        CommonUtilsForTest.deleteFile(path);
     }
 
     @Test

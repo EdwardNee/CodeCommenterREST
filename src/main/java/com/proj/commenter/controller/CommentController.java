@@ -32,7 +32,8 @@ public class CommentController {
     public ResponseEntity<CommentResponse> generateComment(@RequestBody Comment code) {
         CommentResponse result = service.generateComment(code);
 
-        HttpStatus status = result.error().errorEnum() == ErrorEnum.OK ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpStatus status = result.error() == null || result.error().errorEnum() == ErrorEnum.OK
+                ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
 
         return new ResponseEntity<>(result, status);
     }

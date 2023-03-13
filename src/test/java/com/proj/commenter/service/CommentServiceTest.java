@@ -30,7 +30,7 @@ public class CommentServiceTest {
                     print(test(code_line))
                 """;
 
-        CommonUtilsForTest.createFile("test.py", codeForFile);
+        CommonUtilsForTest.createFile("script\\test.py", codeForFile);
 
         CommentResponse result = service.generateComment(new Comment("int a = 5;", null));
 
@@ -42,16 +42,31 @@ public class CommentServiceTest {
 
     @Test
     public void testGenerateCommentError() throws IOException {
+        String initialCode = """
+                import sys
+
+                def test(code_line: str):
+                    return "That is test file: " + code_line
+
+
+                if __name__ == "__main__":
+                    code_line = sys.argv[1]
+                    print(test(code_line))
+                """;
+        CommonUtilsForTest.deleteFile("script\\test.py");
+
         CommentResponse result = service.generateComment(new Comment("int a = 5;", null));
 
+        CommonUtilsForTest.createFile("script\\test.py", initialCode);
         assertNull(result.generatedComment());
         assertNotNull(result.error());
 
-
         String expected = String.format("Error while running python script %s: File does not exist.",
-               /* new File(".").getCanonicalPath() +*/ "test.py");
+                /* new File(".").getCanonicalPath() +*/ "script\\test.py");
 
         assertEquals(expected, result.error().errorMessage());
         assertEquals(ErrorEnum.ERROR, result.error().errorEnum());
     }
 }
+
+

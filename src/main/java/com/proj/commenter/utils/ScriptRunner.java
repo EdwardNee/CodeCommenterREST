@@ -25,7 +25,7 @@ public class ScriptRunner {
      * @return Returns result of the execution.
      */
     public CommentError runPythonScript(String code) {
-        String path = "test.py";
+        String path = "script\\test.py";
         return runPythonScript(code, path);
     }
 
@@ -36,7 +36,14 @@ public class ScriptRunner {
      * @return Returns result of the execution.
      */
     public CommentError runPythonScript(String code, String path) {
-        String baseLine = "python3";
+
+        String baseLine = "py"; // for Windows
+        if (PlatformValidator.isMac()) {
+            baseLine = "python";
+            System.out.println("This is Mac");
+        } else if (PlatformValidator.isUnix()) {
+            baseLine = "python3";
+        }
 
         File file = new File(path);
         if (!file.exists()) {

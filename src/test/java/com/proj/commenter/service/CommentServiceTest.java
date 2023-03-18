@@ -32,7 +32,7 @@ public class CommentServiceTest {
 
         CommonUtilsForTest.createFile("script\\test.py", codeForFile);
 
-        CommentResponse result = service.generateComment(new Comment("int a = 5;", null));
+        CommentResponse result = service.generateComment(new Comment("int a = 5;", null), "script\\test.py");
 
         assertEquals("That is test file: int a = 5;", result.generatedComment());
         assertNull(result.error());
@@ -55,7 +55,7 @@ public class CommentServiceTest {
                 """;
         CommonUtilsForTest.deleteFile("script\\test.py");
 
-        CommentResponse result = service.generateComment(new Comment("int a = 5;", null));
+        CommentResponse result = service.generateComment(new Comment("int a = 5;", null), "script\\test.py");
 
         CommonUtilsForTest.createFile("script\\test.py", initialCode);
         assertNull(result.generatedComment());

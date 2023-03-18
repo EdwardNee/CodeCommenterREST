@@ -7,7 +7,8 @@ public class Comment {
 
     private String firstPart;
 
-    public Comment() {}
+    public Comment() {
+    }
 
     public Comment(String code, String firstPart) {
         this.code = code;
@@ -32,8 +33,12 @@ public class Comment {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Comment comment = (Comment) o;
         return code.equals(comment.code) && firstPart.equals(comment.firstPart);
     }
@@ -45,9 +50,9 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment{" +
-                "code='" + code + '\'' +
-                ", firstPart='" + firstPart + '\'' +
-                '}';
+        return "Comment{"
+                + "code='" + code + '\''
+                + ", firstPart='" + firstPart + '\''
+                + '}';
     }
 }

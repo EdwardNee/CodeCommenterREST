@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService service;
 
+    /**
+     * Getter for service.
+     * @return <code>{@link CommentService}</code>
+     */
     public CommentService getService() {
         return service;
     }
@@ -23,6 +27,10 @@ public class CommentController {
         this.service = service;
     }
 
+    /**
+     * Hello page.
+     * @return String with hello.
+     */
     @GetMapping
     public String initialEntry() {
         return service.initialEntry();
@@ -32,7 +40,8 @@ public class CommentController {
     public ResponseEntity<CommentResponse> generateComment(@RequestBody Comment code) {
         CommentResponse result = service.generateComment(code);
 
-        HttpStatus status = result.error() == null || result.error().errorEnum() == ErrorEnum.OK
+        HttpStatus status =
+                result.error() == null || result.error().errorEnum() == ErrorEnum.OK
                 ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
 
         return new ResponseEntity<>(result, status);

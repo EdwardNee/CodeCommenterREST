@@ -17,7 +17,7 @@ public class ScriptRunner {
     /**
      * String constant to depict handled error while script execution.
      */
-    private static final String errorMessage = "Error while running python script %s: %s";
+    private static final String ERROR_MSG = "Error while running python script %s: %s";
 
     /**
      * Method runs python script and passes <code>code</code> as input value.
@@ -30,7 +30,8 @@ public class ScriptRunner {
     }
 
     /**
-     * Method runs python by a given <code>path</code> script and passes <code>code</code> as input value.
+     * Method runs python by a given <code>path</code> script and passes
+     * <code>code</code> as input value.
      * @param code Input value for running script.
      * @param path Path to executable python script.
      * @return Returns result of the execution.
@@ -47,7 +48,8 @@ public class ScriptRunner {
 
         File file = new File(path);
         if (!file.exists()) {
-            return new CommentError(ErrorEnum.ERROR, String.format(errorMessage, path, "File does not exist."));
+            return new CommentError(ErrorEnum.ERROR,
+                    String.format(ERROR_MSG, path, "File does not exist."));
         }
 
         try {
@@ -67,31 +69,34 @@ public class ScriptRunner {
             if (exitCode == 0) {
                 return new CommentError(ErrorEnum.OK, outResult.toString());
             } else {
-                return new CommentError(ErrorEnum.ERROR, nonZeroCodeProcess(process, path));
+                return new CommentError(ErrorEnum.ERROR,
+                        nonZeroCodeProcess(process, path));
             }
 
         } catch (IOException | InterruptedException e) {
 
-            return new CommentError(ErrorEnum.ERROR, String.format(errorMessage, path, e.getMessage()));
+            return new CommentError(ErrorEnum.ERROR,
+                    String.format(ERROR_MSG, path, e.getMessage()));
             //String.format(errorMessage, path, e.getMessage());
         }
     }
 
     /**
-     * Method that processes case when <code>Process</code> returned non-zero existing code.
+     * Method that processes case when <code>Process</code>
+     * returned non-zero existing code.
      * @param process Run process.
-     * @param path Run process file.
+     * @param path    Run process file.
      * @return returns <code>String</code>
      */
     private String nonZeroCodeProcess(Process process, String path) throws IOException {
-        try(BufferedReader errorReader = process.errorReader()) {
+        try (BufferedReader errorReader = process.errorReader()) {
             String errorLines;
             StringBuilder errorOutput = new StringBuilder();
 
             while ((errorLines = errorReader.readLine()) != null) {
                 errorOutput.append(errorLines).append("\n");
             }
-            return String.format(errorMessage, path, errorOutput);
+            return String.format(ERROR_MSG, path, errorOutput);
         }
     }
 }

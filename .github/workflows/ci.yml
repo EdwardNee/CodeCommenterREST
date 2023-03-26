@@ -17,9 +17,12 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Checkstyle linter
+      run: mvn checkstyle:check
+
     - name: Build Docker image
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       run: |
-        docker build --build-arg CODECOV_TOKEN=$CODECOV_TOKEN --tag my-app:latest .
+        docker build --build-arg CODECOV_TOKEN=$CODECOV_TOKEN --tag my-app:latest -f Dockerfile.test .

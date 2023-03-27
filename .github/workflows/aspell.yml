@@ -16,13 +16,13 @@ jobs:
 
       - name: Check spelling
         run: |
-          cat README.md | aspell --mode=markdown --encoding=utf-8 list | sort | uniq | tee misspelled.txt
+          cat README.md | aspell --mode=markdown --encoding=utf-8 list -p spellignore.txt | sort | uniq | grep -vwf spellignore.txt | tee aspell_errors.txt
 
       - name: Check if misspellings found
         run: |
-          if [ -s misspelled.txt ]; then
+          if [ -s aspell_errors.txt ]; then
             echo "Misspellings found!"
-            cat misspelled.txt
+            cat aspell_errors.txt
             exit 1
           else
             echo "No misspellings found. Pipeline passed."

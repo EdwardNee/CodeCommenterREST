@@ -5,6 +5,8 @@
 ## What will you build  
 You will build a simple web application with Spring Boot and Java 17, which has a working endpoint for generating comments for a method.
 
+**Author:** [Eduard Ni](https://github.com/EdwardNee)
+
 ## Technology stack  
 * Java 17
 * Apache Maven 3.8.

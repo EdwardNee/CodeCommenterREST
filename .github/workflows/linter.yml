@@ -1,0 +1,17 @@
+name: Linter Checkstyle
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Checkstyle linter.yml
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven

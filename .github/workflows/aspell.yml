@@ -1,0 +1,30 @@
+name: Aspell check
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  aspell-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install aspell
+        run: sudo apt-get update && sudo apt-get -y install aspell
+
+      - name: Check spelling
+        run: |
+          cat README.md | aspell --mode=markdown --encoding=utf-8 list -p spellignore.txt | sort | uniq | grep -vwf spellignore.txt | tee aspell_errors.txt
+
+      - name: Check if misspellings found
+        run: |
+          if [ -s aspell_errors.txt ]; then
+            echo "Misspellings found!"
+            cat aspell_errors.txt
+            exit 1
+          else
+            echo "No misspellings found. Pipeline passed."
+            exit 0
+          fi
